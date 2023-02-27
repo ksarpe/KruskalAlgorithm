@@ -3,9 +3,12 @@
 
 class Graph:
 
-    def __init__(self, vertices):
-        self.V = vertices  # No. of vertices
+    def __init__(self):
+        self.V = 0  # No. of vertices (initially 0)
         self.graph = []
+
+    def add_vertex(self):
+        self.V += 1
 
     def add_edge(self, u, v, w):  # source, dest, weight
         self.graph.append([u, v, w])
