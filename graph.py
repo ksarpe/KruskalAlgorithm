@@ -1,5 +1,3 @@
-# TODO add incrementation of vertices along with visual aspects
-# TODO add edges along with visual aspects [harder]
 import time
 
 
@@ -18,6 +16,9 @@ class Graph:
         self.graph = []
         self.result = []
         self.V = 0
+
+    def clear_result(self):
+        self.result = []
 
     def add_vertex(self):
         self.V += 1
@@ -78,8 +79,8 @@ class Graph:
                 e = e + 1  # increment added edge for loop condition
                 self.result.append([u, v, w])
                 for color_change_callback in self.observers:
+                    time.sleep(0.6)
                     color_change_callback(self.get_last_result())
-                    time.sleep(1)
 
                 self.union(parent, rank, x, y)
 

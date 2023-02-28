@@ -14,7 +14,8 @@ class Line:
     def draw(self, win):
         pygame.draw.line(win, self.color, (self.x1, self.y1), (self.x2, self.y2), 4)
 
-        font = pygame.font.SysFont('comicsans', 23)
-        text = font.render(str(self.weight), True, colors.BLACK)
-        win.blit(text,
-                 ((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2))
+        if self.color != colors.BG_COLOR:
+            font = pygame.font.SysFont('comicsans', 23)
+            text = font.render(str(self.weight), True, colors.BLACK)
+            win.blit(text,
+                     ((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2))
