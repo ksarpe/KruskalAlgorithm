@@ -4,14 +4,13 @@ import colors
 
 
 class Vertex:
-    def __init__(self, x, y, radius, text):
+    def __init__(self, x, y, text):
         self.x = x
         self.y = y
-        self.radius = radius
         self.text = text
 
     def draw(self, win):
-        pygame.draw.circle(win, colors.LIGHT_BLUE, (self.x, self.y), self.radius)
+        pygame.draw.circle(win, colors.LIGHT_BLUE, (self.x, self.y), 20)
 
         font = pygame.font.SysFont('comicsans', 23)
         text = font.render(self.text, True, colors.BLACK)

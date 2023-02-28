@@ -1,19 +1,34 @@
 # TODO add incrementation of vertices along with visual aspects
 # TODO add edges along with visual aspects [harder]
+import time
+
 
 class Graph:
 
     def __init__(self):
         self.V = 0  # No. of vertices (initially 0)
         self.graph = []
+        self.result = []
+        self.observers = []
+
+    def add_observer(self, callback):
+        self.observers.append(callback)
+
+    def clear(self):
+        self.graph = []
+        self.result = []
+        self.V = 0
 
     def add_vertex(self):
         self.V += 1
         print("Vertices amount updated:", self.V)
 
     def add_edge(self, u, v, w):  # source, dest, weight
-        self.graph.append([u, v, w])
+        self.graph.append([u - 1, v - 1, w])
         print("Graph updated:", self.graph)
+
+    def get_last_result(self):
+        return self.result[len(self.result) - 1]
 
     # path compression technique, to have parent-child relationship
     def find(self, parent, i):
@@ -36,7 +51,6 @@ class Graph:
 
     def kruskal_mst(self):
 
-        result = []
         i = 0  # actual graph increment check
         e = 0  # check edges for loop
 
@@ -62,12 +76,16 @@ class Graph:
 
             if x != y:  # do smth only if not cycle
                 e = e + 1  # increment added edge for loop condition
-                result.append([u, v, w])
+                self.result.append([u, v, w])
+                for color_change_callback in self.observers:
+                    color_change_callback(self.get_last_result())
+                    time.sleep(1)
+
                 self.union(parent, rank, x, y)
 
         minimum_cost = 0
         print("Edges in the constructed MST")
-        for u, v, weight in result:
+        for u, v, weight in self.result:
             minimum_cost += weight
             print(f"{u} -- {v} == {weight}")
         print("Total minimum cost:", minimum_cost)
