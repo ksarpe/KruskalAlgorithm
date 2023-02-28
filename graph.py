@@ -9,9 +9,11 @@ class Graph:
 
     def add_vertex(self):
         self.V += 1
+        print("Vertices amount updated:", self.V)
 
     def add_edge(self, u, v, w):  # source, dest, weight
         self.graph.append([u, v, w])
+        print("Graph updated:", self.graph)
 
     # path compression technique, to have parent-child relationship
     def find(self, parent, i):
