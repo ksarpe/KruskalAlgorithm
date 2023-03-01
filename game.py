@@ -48,8 +48,8 @@ class Game:
             self.graph.add_line_color_observer(self.update_lines_colors)
             self.graph.add_finish_observer(self.algorithm_finish_callback)
 
-    def algorithm_finish_callback(self):
-        self.bottom_panel.set_log("Algorithm has been finished successfully", colors.BLACK)
+    def algorithm_finish_callback(self, minimal_cost):
+        self.bottom_panel.set_log("Algorithm has been finished successfully, minimal cost: " + str(minimal_cost), colors.BLACK)
 
     # this is a listener, it is triggered only by graph class
     # it changes last changed color of edge

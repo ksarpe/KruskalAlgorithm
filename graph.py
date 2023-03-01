@@ -9,7 +9,6 @@ class Graph:
         self.V = 0  # No. of vertices (initially 0)
         self.graph = []
         self.result = []
-        self.each_edge = []
         self.line_color_observers = []
         self.finish_observers = []
 
@@ -38,11 +37,6 @@ class Graph:
     def get_last_result(self):
         return self.result[len(self.result) - 1]
 
-    # TODO could be simplified just by adding each edge to result list
-    # TODO depends if we need to have result at all
-    def get_last_edge(self):
-        return self.each_edge[len(self.each_edge) - 1]
-
     # path compression technique, to have parent-child relationship
     def find(self, parent, i):
         if parent[i] != i:
@@ -66,7 +60,7 @@ class Graph:
 
         i = 0  # actual graph increment check
         e = 0  # check edges for loop
-
+        minimal_cost = 0
         # Sort graph in descending order
         self.graph = sorted(self.graph,
                             key=lambda item: item[2])
@@ -83,17 +77,17 @@ class Graph:
         while e < self.V - 1:
 
             u, v, w = self.graph[i]  # Pick the smallest edge
-            self.each_edge.append([u, v, w])
+            self.result.append([u, v, w])
             for line_color_callback in self.line_color_observers:
                 time.sleep(0.8)
-                line_color_callback(self.get_last_edge(), colors.BLUE)
+                line_color_callback(self.get_last_result(), colors.BLUE)
             i = i + 1  # increment helper for next
             x = self.find(parent, u)
             y = self.find(parent, v)
 
             if x != y:  # do smth only if not cycle
                 e = e + 1  # increment added edge for loop condition
-                self.result.append([u, v, w])
+                minimal_cost += w
                 for line_color_callback in self.line_color_observers:
                     time.sleep(0.8)
                     line_color_callback(self.get_last_result(), colors.GREEN)
@@ -103,15 +97,10 @@ class Graph:
             else:
                 for line_color_callback in self.line_color_observers:
                     time.sleep(0.8)
-                    line_color_callback(self.get_last_edge(), colors.RED)
+                    line_color_callback(self.get_last_result(), colors.RED)
                     time.sleep(0.4)
-                    line_color_callback(self.get_last_edge(), colors.BG_COLOR)
+                    line_color_callback(self.get_last_result(), colors.BG_COLOR)
 
-        minimum_cost = 0
-        print("Edges in the constructed MST")
-        for u, v, weight in self.result:
-            minimum_cost += weight
-            print(f"{u} -- {v} == {weight}")
-        print("Total minimum cost:", minimum_cost)
+        # callback for the game about finish algorithm
         for finish_callback in self.finish_observers:
-            finish_callback()
+            finish_callback(minimal_cost)
