@@ -7,10 +7,14 @@ class Graph:
         self.V = 0  # No. of vertices (initially 0)
         self.graph = []
         self.result = []
-        self.observers = []
+        self.green_observers = []
+        self.finish_observers = []
 
-    def add_observer(self, callback):
-        self.observers.append(callback)
+    def add_green_observer(self, callback):
+        self.green_observers.append(callback)
+
+    def add_finish_observer(self, callback):
+        self.finish_observers.append(callback)
 
     def clear(self):
         self.graph = []
@@ -78,9 +82,9 @@ class Graph:
             if x != y:  # do smth only if not cycle
                 e = e + 1  # increment added edge for loop condition
                 self.result.append([u, v, w])
-                for color_change_callback in self.observers:
+                for green_change_callback in self.green_observers:
                     time.sleep(0.6)
-                    color_change_callback(self.get_last_result())
+                    green_change_callback(self.get_last_result())
 
                 self.union(parent, rank, x, y)
 
@@ -90,3 +94,5 @@ class Graph:
             minimum_cost += weight
             print(f"{u} -- {v} == {weight}")
         print("Total minimum cost:", minimum_cost)
+        for finish_callback in self.finish_observers:
+            finish_callback()
