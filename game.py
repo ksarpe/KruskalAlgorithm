@@ -28,7 +28,7 @@ class Game:
         # buttons
         self.btn_start = Button(colors.GREEN, 40, 15, 230, 36, "START")
         self.btn_edge = Button(colors.RED, 290, 15, 150, 36, "Add Edge")
-        self.btn_clear = Button(colors.RED, 465, 15, 120, 36, "Clear")
+        self.btn_clear = Button(colors.RED, 460, 15, 120, 36, "Clear")
         self.btn_example1 = Button(colors.LIGHT_BLUE, 970, 15, 36, 36, "1")
         self.btn_example2 = Button(colors.LIGHT_BLUE, 1020, 15, 36, 36, "2")
 
@@ -45,7 +45,7 @@ class Game:
     def assign_observers(self):
         # listen to graph edge added to actual results list
         if self.graph is not None:
-            self.graph.add_green_observer(self.update_lines_colors)
+            self.graph.add_line_color_observer(self.update_lines_colors)
             self.graph.add_finish_observer(self.algorithm_finish_callback)
 
     def algorithm_finish_callback(self):
@@ -53,7 +53,7 @@ class Game:
 
     # this is a listener, it is triggered only by graph class
     # it changes last changed color of edge
-    def update_lines_colors(self, last_result):
+    def update_lines_colors(self, last_result, color):
         source = last_result[0]
         dest = last_result[1]
         line_start = ()
@@ -72,7 +72,7 @@ class Game:
                     and line.y1 == line_start[1] \
                     and line.x2 == line_end[0] \
                     and line.y2 == line_end[1]:
-                line.color = colors.GREEN
+                line.color = color
                 break
 
     # add vertex to game and to graph class
