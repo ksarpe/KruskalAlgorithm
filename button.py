@@ -26,8 +26,12 @@ class Button:
                      (self.x + (self.width / 2 - text.get_width() / 2), self.y + (self.height / 2 - text.get_height() / 2)))
         # pygame.draw.rect(win, self.button_color, self.button_rect)
         # win.blit(self.button_text, self.button_rect.center)
+
     def click(self, pos):
         if self.x < pos[0] < self.x + self.width:
             if self.y < pos[1] < self.y + self.height:
                 return True
         return False
+
+    def change_color(self, col):
+        self.color = col

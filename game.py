@@ -9,13 +9,14 @@ from vertex import Vertex
 from input_box import InputBox
 from line import Line
 from bottom_panel import BottomPanel
-from example import  ExampleCreator
+from example import ExampleCreator
+from right_panel import RightPanel
 
 
 class Game:
     # constants
     INCREMENT = 1  # for vertex numeration
-    VERSION = "v2.0"
+    VERSION = "v2.5"
 
     def __init__(self, graph):
         pygame.init()
@@ -31,13 +32,16 @@ class Game:
         self.btn_clear = Button(colors.RED, 460, 15, 120, 36, "Clear")
         self.btn_example1 = Button(colors.LIGHT_BLUE, 970, 15, 36, 36, "1")
         self.btn_example2 = Button(colors.LIGHT_BLUE, 1020, 15, 36, 36, "2")
+        self.btn_automate = Button(colors.RED, 850, 15, 100, 36, "AUTO")
 
         self.bottom_panel = BottomPanel(680)
+        self.right_panel = RightPanel(900)
         self.example_creator = ExampleCreator(self)
 
         self.kruskal_thread = threading.Thread()
         self.started = False  # ongoing algorithm
         self.can_modify = True  # while example is on the board
+        self.automated = False
         self.vertices = []
         self.lines = []
 
@@ -47,6 +51,9 @@ class Game:
         if self.graph is not None:
             self.graph.add_line_color_observer(self.update_lines_colors)
             self.graph.add_finish_observer(self.algorithm_finish_callback)
+
+    def is_automated(self):
+        return self.automated
 
     def algorithm_finish_callback(self, minimal_cost):
         self.bottom_panel.set_log("Algorithm has been finished successfully, minimal cost: " + str(minimal_cost), colors.BLACK)
@@ -107,11 +114,13 @@ class Game:
         self.window.fill(colors.BG_COLOR)
         pygame.draw.line(self.window, colors.BLACK, (0, 66), (1080, 66), 3)
         self.bottom_panel.draw(self.window)
+        self.right_panel.draw(self.window)
         self.btn_start.draw(self.window, True)
         self.btn_edge.draw(self.window, True)
         self.btn_clear.draw(self.window, True)
         self.btn_example1.draw(self.window, True)
         self.btn_example2.draw(self.window, True)
+        self.btn_automate.draw(self.window, True)
         for line in self.lines:
             line.draw(self.window)
         for vertex in self.vertices:
@@ -172,6 +181,13 @@ class Game:
             else:
                 self.bottom_panel.set_log("Firstly clear the board!", colors.ERROR_LOG)
 
+        if self.btn_automate.click(mouse):
+            self.automated = not self.automated
+            if self.btn_automate.color == colors.RED:
+                self.btn_automate.change_color(colors.GREEN)
+            else:
+                self.btn_automate.change_color(colors.RED)
+
         if self.btn_start.click(mouse):
             if self.graph.V < 2 or (len(self.lines) + 1) < self.graph.V:
                 self.bottom_panel.set_log("Board is wrong!", colors.ERROR_LOG)
@@ -181,7 +197,7 @@ class Game:
                 self.bottom_panel.set_log("Algorithm has been started!", colors.BLACK)
                 for line in self.lines:
                     line.color = colors.BG_COLOR
-                self.kruskal_thread = threading.Thread(target=self.graph.kruskal_mst)
+                self.kruskal_thread = threading.Thread(target=self.graph.kruskal_mst, args=(self.is_automated(),))
                 self.kruskal_thread.start()
                 self.started = True
             else:

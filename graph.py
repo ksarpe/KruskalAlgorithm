@@ -56,7 +56,7 @@ class Graph:
             parent[y] = x
             rank[x] += 1
 
-    def kruskal_mst(self):
+    def kruskal_mst(self, is_automated):
 
         i = 0  # actual graph increment check
         e = 0  # check edges for loop
@@ -79,7 +79,10 @@ class Graph:
             u, v, w = self.graph[i]  # Pick the smallest edge
             self.result.append([u, v, w])
             for line_color_callback in self.line_color_observers:
-                time.sleep(0.8)
+                if is_automated:
+                    time.sleep(0.6)
+                else:
+                    input("Press...")
                 line_color_callback(self.get_last_result(), colors.BLUE)
             i = i + 1  # increment helper for next
             x = self.find(parent, u)
@@ -89,16 +92,25 @@ class Graph:
                 e = e + 1  # increment added edge for loop condition
                 minimal_cost += w
                 for line_color_callback in self.line_color_observers:
-                    time.sleep(0.8)
+                    if is_automated:
+                        time.sleep(0.6)
+                    else:
+                        input("Press...")
                     line_color_callback(self.get_last_result(), colors.GREEN)
 
                 self.union(parent, rank, x, y)
 
             else:
                 for line_color_callback in self.line_color_observers:
-                    time.sleep(0.8)
+                    if is_automated:
+                        time.sleep(0.6)
+                    else:
+                        input("Press...")
                     line_color_callback(self.get_last_result(), colors.RED)
-                    time.sleep(0.4)
+                    if is_automated:
+                        time.sleep(0.4)
+                    else:
+                        input("Press...")
                     line_color_callback(self.get_last_result(), colors.BG_COLOR)
 
         # callback for the game about finish algorithm
