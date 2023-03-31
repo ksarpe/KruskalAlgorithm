@@ -11,6 +11,8 @@ class Graph:
         self.result = []
         self.line_color_observers = []
         self.finish_observers = []
+        self.parent = []
+        self.rank = []
 
     def add_line_color_observer(self, callback):
         self.line_color_observers.append(callback)
@@ -65,13 +67,10 @@ class Graph:
         self.graph = sorted(self.graph,
                             key=lambda item: item[2])
 
-        parent = []
-        rank = []
-
         # Create initial sets [0   1   2   3] with no connections and root as itself with rank 0
         for node in range(self.V):
-            parent.append(node)  # ex. [0,1,2,3] for Graph(4) constructor
-            rank.append(0)  # ex. [0,0,0,0]
+            self.parent.append(node)  # ex. [0,1,2,3] for Graph(4) constructor
+            self.rank.append(0)  # ex. [0,0,0,0]
 
         # Main condition for mst
         while e < self.V - 1:
@@ -85,8 +84,8 @@ class Graph:
                     input("Press...")
                 line_color_callback(self.get_last_result(), colors.BLUE)
             i = i + 1  # increment helper for next
-            x = self.find(parent, u)
-            y = self.find(parent, v)
+            x = self.find(self.parent, u)
+            y = self.find(self.parent, v)
 
             if x != y:  # do smth only if not cycle
                 e = e + 1  # increment added edge for loop condition
@@ -98,7 +97,7 @@ class Graph:
                         input("Press...")
                     line_color_callback(self.get_last_result(), colors.GREEN)
 
-                self.union(parent, rank, x, y)
+                self.union(self.parent, self.rank, x, y)
 
             else:
                 for line_color_callback in self.line_color_observers:
