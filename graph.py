@@ -11,8 +11,12 @@ class Graph:
         self.result = []
         self.line_color_observers = []
         self.finish_observers = []
+        self.sort_observer = []
         self.parent = []
         self.rank = []
+
+    def get_result(self):
+        return self.result
 
     def add_line_color_observer(self, callback):
         self.line_color_observers.append(callback)
@@ -20,6 +24,8 @@ class Graph:
     def add_finish_observer(self, callback):
         self.finish_observers.append(callback)
 
+    def add_sort_observer(self, callback):
+        self.sort_observer.append(callback)
     def clear(self):
         self.graph = []
         self.result = []
@@ -66,6 +72,8 @@ class Graph:
         # Sort graph in descending order
         self.graph = sorted(self.graph,
                             key=lambda item: item[2])
+        for sort_callback in self.sort_observer:
+            sort_callback(self.graph)
 
         # Create initial sets [0   1   2   3] with no connections and root as itself with rank 0
         for node in range(self.V):
@@ -79,10 +87,9 @@ class Graph:
             self.result.append([u, v, w])
             for line_color_callback in self.line_color_observers:
                 if is_automated:
-                    time.sleep(0.6)
-                else:
-                    input("Press...")
+                    time.sleep(0.3)
                 line_color_callback(self.get_last_result(), colors.BLUE)
+
             i = i + 1  # increment helper for next
             x = self.find(self.parent, u)
             y = self.find(self.parent, v)

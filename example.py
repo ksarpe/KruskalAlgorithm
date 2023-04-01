@@ -10,12 +10,12 @@ class ExampleCreator:
     def make_example_one(self):
         self.game.add_vertex(100, 360)  # 215 difference / 240 difference
         self.game.add_vertex(315, 120)
-        self.game.add_vertex(315, 600)
+        self.game.add_vertex(315, 420)
         self.game.add_vertex(530, 120)
-        self.game.add_vertex(530, 360)
-        self.game.add_vertex(530, 600)
+        self.game.add_vertex(530, 310)
+        self.game.add_vertex(530, 420)
         self.game.add_vertex(745, 120)
-        self.game.add_vertex(745, 600)
+        self.game.add_vertex(745, 420)
         self.game.add_vertex(960, 360)
         self.game.add_edge(1, 2, 4)
         self.game.add_edge(2, 3, 11)
